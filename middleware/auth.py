@@ -1,7 +1,6 @@
 from fastapi import HTTPException,Request
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
-from app.config.database import get_session
-from app.utils.auth import decode_token
+from app.core.security import decode_token
 
 class AuthMiddleware(HTTPBearer):
     def __init__(self,auto_error:bool = True):
