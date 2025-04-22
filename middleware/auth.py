@@ -15,7 +15,6 @@ class AuthMiddleware(HTTPBearer):
             raise HTTPException(
                 status_code=401,detail="Authorization token missing"
             )
-        # session: Session = next(get_session)
         try:
             user_id =decode_token(credentials.credentials)
         except Exception:
@@ -24,4 +23,3 @@ class AuthMiddleware(HTTPBearer):
                 detail="Invalid token or token has expired"
             )
         request.state.id = user_id
-        # return await super().__call__(request)
