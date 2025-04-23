@@ -1,11 +1,11 @@
 from sqlmodel import Session, select
 from app.models.user import User
-from app.schemas.user import UserCreate,UserLogin
+from app.schemas.user import UserCreate,UserLogin,UserRead
 from app.core.security import hash_password,verify_password,generate_access_token,decode_token
 from fastapi import HTTPException
 
 def register_user(db:Session,user_data:UserCreate):
-    existing_user = db.exec(select(User).where(User.id == user_data.email)).first()
+    existing_user = db.exec(select(User).where(User.email == user_data.email)).first()
 
     if existing_user:
         raise HTTPException(status_code=400,detail="Email already registered.")
@@ -19,7 +19,7 @@ def register_user(db:Session,user_data:UserCreate):
     db.commit()
     db.refresh(new_user)
     return {"message":"User registered successfully.",
-            "data":new_user
+            "data":UserRead(**new_user.model_dump(exclude=['password']))
             }
 
 def login_user(db:Session,credentials:UserLogin):
