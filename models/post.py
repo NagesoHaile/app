@@ -11,7 +11,7 @@ class Post(SQLModel,table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
     title:str
     content:str
-    user_id:uuid.UUID = Field(foreign_key="user.id")
+    user_id:uuid.UUID = Field(foreign_key="users.id")
     author: Optional[User] = Relationship(back_populates="posts")
     comments: List["Comment"] = Relationship(back_populates="post")
     created_at: datetime = Field(default_factory=datetime.now)
@@ -19,9 +19,10 @@ class Post(SQLModel,table=True):
 
 
 class Comment(SQLModel,table=True):
+    __tablename__ = 'comments'
     id:uuid.UUID = Field(default_factory=uuid.uuid4,primary_key=True)
-    user_id: uuid.UUID = Field(foreign_key="user.id")
-    post_id: uuid.UUID = Field(foreign_key="post.id")
+    user_id: uuid.UUID = Field(foreign_key="users.id")
+    post_id: uuid.UUID = Field(foreign_key="posts.id",)
     author: Optional[User] = Relationship(back_populates="comments")
     post:Optional[Post] = Relationship(back_populates="comments")
     created_at: datetime = Field(default_factory=datetime.now)
